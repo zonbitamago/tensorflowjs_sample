@@ -1,25 +1,32 @@
 const mobilenet = require("@tensorflow-models/mobilenet");
 global.fetch = require("node-fetch");
-const { createCanvas, Image } = require("canvas");
+const { createCanvas, loadImage } = require("canvas");
 
-start = async () => {
-  console.log(mobilenet);
-
-  const canvas = createCanvas(100, 100);
+const getCanvasImage = async () => {
+  const img = await loadImage("./img/cat1.jpeg");
+  const canvas = createCanvas(img.width, img.height);
   const ctx = canvas.getContext("2d");
-  const img = new Image();
-  img.onload = () => {
-    ctx.drawImage(img, 0, 0);
-  };
-  img.src = "./img/cat1.jpeg";
+  ctx.drawImage(img, 0, 0);
 
+  return canvas;
+};
+
+const start = async () => {
   console.log("model loading...");
   const model = await mobilenet.load();
   console.log("model load end !");
 
-  model.classify(img).then(preds => {
-    console.log(preds);
-  });
+  console.log("canvas loading...");
+  const img = await getCanvasImage();
+  console.log("canvas loadend !");
+
+  console.log("clasify start...");
+  //   model.classify(img).then(preds => {
+  //     console.log(preds);
+  //   });
+  const preds = await model.classify(img);
+  console.log(preds);
+  console.log("clasify end !");
 
   console.log("hello mobilenet!!");
 };
