@@ -1,0 +1,2 @@
+./img/cat1.jpeg
+./img/airplain.jpeg
